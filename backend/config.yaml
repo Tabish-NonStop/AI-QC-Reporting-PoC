@@ -1,0 +1,16 @@
+# Paths are WSL Linux paths
+runs_root: "../pipeline/runs"
+work_root: "../pipeline/work"
+
+# Nextflow
+nextflow_cmd: "nextflow"
+pipeline_path: "../pipeline/main.nf"   # change to your pipeline entrypoint
+param_name: "reads"           # the pipeline param that receives the FASTQ (used as --reads <path>)
+
+# Output discovery
+# We will look for MultiQC here after the run:
+multiqc_html_relpath: "multiqc/multiqc_report.html"
+
+# Server
+host: "127.0.0.1"
+port: 8000
