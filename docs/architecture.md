@@ -12,13 +12,13 @@ FrontEnd + BackEnd + Pipeline only (first-party scope). External infrastructure 
 flowchart LR
     User[User]
 
-    subgraph FE[FrontEnd (Streamlit)]
+    subgraph FE["FrontEnd (Streamlit)"]
         FE_UI[Streamlit App<br/>frontend/streamlit_app.py]
         FE_ACTIONS[Run Controls:<br/>Create / Upload / Start / Refresh / Delete]
         FE_VIEW[Status + MultiQC Viewer<br/>(iframe + download links)]
     end
 
-    subgraph BE[BackEnd (FastAPI)]
+    subgraph BE["BackEnd (FastAPI)"]
         BE_API[FastAPI Service<br/>backend/app.py]
         BE_META[Run Metadata<br/>meta.json per run]
         BE_RUNS[Runs Storage<br/>pipeline/runs/&lt;run_id&gt;/]
@@ -26,7 +26,7 @@ flowchart LR
         BE_STATIC[Static Report Serving<br/>/runs mount + download routes]
     end
 
-    subgraph NF[Pipeline (Nextflow DSL2)]
+    subgraph NF["Pipeline (Nextflow DSL2)"]
         NF_MAIN[main.nf orchestration]
         NF_HDR[FASTQ_HEADER]
         NF_FASTQC[FASTQC]
