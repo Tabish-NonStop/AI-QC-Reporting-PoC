@@ -92,7 +92,7 @@ with col2:
     # MultiQC iframe (served by backend)
     if status == "done":
         # Use the backend route that returns HTML
-        multiqc_url = f"{BACKEND}/api/runs/{st.session_state.run_id}/multiqc"
+        multiqc_url = f"{BACKEND}/runs/{run_id}/results/multiqc_final/multiqc_report.html"
 
         st.markdown("**MultiQC report:**")
         components.iframe(multiqc_url, height=900, scrolling=True)

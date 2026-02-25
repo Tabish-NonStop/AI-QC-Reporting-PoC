@@ -49,7 +49,7 @@ app.add_middleware(
 
 def run_dir(run_id: str) -> Path:
     return RUNS_ROOT / run_id
-
+app.mount("/runs", StaticFiles(directory=str(RUNS_ROOT), html=True), name="runs")
 
 def meta_path(run_id: str) -> Path:
     return run_dir(run_id) / "meta.json"
