@@ -4,6 +4,7 @@ import uuid
 import time
 import shutil
 import signal
+import zipfile
 import subprocess
 from pathlib import Path
 from typing import Optional, Dict, Any
@@ -13,7 +14,6 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-
 
 def load_config() -> Dict[str, Any]:
     cfg_path = Path(__file__).parent / "config.yaml"
@@ -289,6 +289,29 @@ def get_multiqc(run_id: str):
 # This exposes /outputs/<run_id>/... to the browser.
 app.mount("/outputs", StaticFiles(directory=str(RUNS_ROOT), html=False), name="outputs")
 
+@app.get("/api/runs/{run_id}/download/multiqc_html")
+def download_multiqc_html(run_id: str):
+    meta = load_meta(run_id)
+    html = Path(meta["outdir"]) / MULTIQC_HTML_RELPATH
+    if not html.exists():
+        raise HTTPException(status_code=404, detail="MultiQC HTML not found")
+    return FileResponse(str(html), filename="multiqc_report.html", media_type="text/html")
+
+@app.get("/api/runs/{run_id}/download/multiqc_zip")
+def download_multiqc_zip(run_id: str):
+    meta = load_meta(run_id)
+    outdir = Path(meta["outdir"])
+    report_dir = outdir / "multiqc_final"   # or derive from MULTIQC_HTML_RELPATH parent
+    if not report_dir.exists():
+        raise HTTPException(status_code=404, detail="MultiQC folder not found")
+
+    zip_path = run_dir(run_id) / "multiqc_final.zip"
+    with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as z:
+        for p in report_dir.rglob("*"):
+            if p.is_file():
+                z.write(p, arcname=str(p.relative_to(report_dir)))
+
+    return FileResponse(str(zip_path), filename="multiqc_final.zip", media_type="application/zip")
 
 @app.delete("/api/runs/{run_id}")
 def delete_run(run_id: str):

@@ -102,3 +102,6 @@ with col2:
             for _ in range(200):  # ~1000s max
                 time.sleep(5)
                 st.rerun()
+
+    st.markdown(f"[Download MultiQC HTML]({BACKEND}/api/runs/{run_id}/download/multiqc_html)")
+    st.markdown(f"[Download MultiQC ZIP]({BACKEND}/api/runs/{run_id}/download/multiqc_zip)")
