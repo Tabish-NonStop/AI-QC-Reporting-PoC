@@ -29,6 +29,13 @@ process LLM_INFER {
           {role: "system", content: \$system},
           {role: "user", content: \$user}
         ],
+        format: {
+          type: "Object",
+          properties: {
+            text: {type: "string"}
+          },
+          required: ["text"]
+        },
         stream: false
       }' \
     | curl -s http://localhost:11434/api/chat \
